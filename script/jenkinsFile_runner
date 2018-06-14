@@ -1,0 +1,10 @@
+node {
+//withCredentials([usernamePassword(passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
+    sh("git config --global user.email 'you@example.com'")
+    sh("git config --global user.name 'Your Name'")
+    
+    sh("git tag -a some_tag_${BUILD_NUMBER}  -m 'Jenkins'")
+    sh("git push https://Ngschumacher:7wDV75NFKfuq@github.com/Ngschumacher/Timelog.git --tags")
+//}
+
+}
