@@ -1,0 +1,148 @@
+
+
+def BuildNumber 
+def BuildReleaseVersion
+def ReleaseVersion
+def Branch
+def ProjectBuilderJobName
+def DeployerJobNames
+
+
+
+
+pipeline {
+   
+    agent any 
+
+    stages {
+		stage('Starting mail') {
+			steps {
+			
+				script {
+				
+					if(params.SendNotification) {
+						SendNotification("starting")
+					}
+					
+				}
+			}
+		}
+	
+		stage('Setup') {
+			steps {
+				
+
+				script {
+					println "Securing all the proper settings is present to go forward"
+					
+					if(!env.ReleaseVersion?.trim()) {
+						error("No 'ReleaseVersion' parameter were configured for this build")
+					} 
+					ReleaseVersion = env.ReleaseVersion
+					println "ReleaseVersion = $ReleaseVersion"
+					
+					if(!env.Branch?.trim()) {
+						error("No 'Branch' parameter were configured for this build")
+					} 
+					Branch = env.Branch
+					println "Branch = $Branch"
+					
+					
+					ProjectBuilderJobName = "${params.ProjectBuilderJobName}"
+					DeployerJobNames = params.DeployerJobNames.split(',')
+
+				}
+			}
+		}
+	
+        stage('Run Builder') { 
+           
+            steps {
+				script {
+					
+				
+					def builderBuild = build job: "${ProjectBuilderJobName}", parameters: [
+						[$class: 'BooleanParameterValue', name: 'OnlyCdn', value:  Boolean.valueOf(params.OnlyCdn) ],
+						[$class: 'BooleanParameterValue', name: 'UploadToCdn', value:  Boolean.valueOf(params.UploadToCdn) ] 
+					]
+					println builderBuild.getNumber()
+					BuildNumber = builderBuild.getNumber()
+					BuildReleaseVersion = "${ReleaseVersion}.${BuildNumber}"
+				}
+			}
+        }
+		
+		stage('Run deployers') { 
+           
+            steps {
+				script {
+					println DeployerJobNames
+						
+					for (int i=0;i < DeployerJobNames.length;i++){
+						println DeployerJobNames[i]
+						build job: "${DeployerJobNames[i]}", parameters: [
+						    [$class: 'BooleanParameterValue', name: 'OnlyCdn', value:  Boolean.valueOf(params.OnlyCdn) ], 
+						    [$class: 'StringParameterValue', name: 'BuildReleaseVersion', value: "${BuildReleaseVersion}" ],
+						]
+					}
+					
+				}
+			}
+        }
+		stage('send mail') {
+			steps {
+				script {
+					if(params.SendNotification) {
+						SendNotification("completed")
+					}
+				}
+			} 
+		}
+    }
+	
+	post {
+		always {
+			step([$class: 'Mailer',
+				notifyEveryUnstableBuild: true,
+				recipients: DeveloperEmailList,
+				sendToIndividuals: true])
+		}
+		failure { 
+            SendNotification("error")
+			println "failure post stage"
+        }
+    }
+}
+
+
+def SendNotification(buildChanged)
+{
+	//retrieved from global
+	def emailNotifications = NotificationEmailList
+	
+    if (buildChanged == 'starting')
+    {
+        // notify users when the build is back to normal
+        mail to: emailNotifications,
+            subject: "Build started: ${currentBuild.fullDisplayName}, Release version : $ReleaseVersion",
+            body: "The build has started: ${env.BUILD_URL} \n " +
+					"OnlyCdn : ${params.OnlyCdn}"
+    }
+    else if (buildChanged == 'completed') {
+		// notify users when the build is back to normal
+        mail to: emailNotifications,
+            subject: "Build completed : ${currentBuild.fullDisplayName}, Release version : $ReleaseVersion",
+            body: "Build completed ${env.BUILD_URL}   \n" +
+					"OnlyCdn : ${params.OnlyCdn}"
+	} 
+	else if (buildChanged == 'error') {
+		// notify users when the build is back to normal
+        mail to: emailNotifications,
+            subject: "Build Error : ${currentBuild.fullDisplayName}, Release version : $ReleaseVersion",
+            body: "The build failed, check log here: ${env.BUILD_URL}  \n" +
+					"OnlyCdn : ${params.OnlyCdn} \n" +
+					"Developers has been notified"
+	}
+}
+
+
