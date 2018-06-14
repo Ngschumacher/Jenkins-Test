@@ -1,6 +1,10 @@
 node {
 //withCredentials([usernamePassword(passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
     //sh("git url: https://Ngschumacher:7wDV75NFKfuq@github.com/Ngschumacher/Timelog.git")
+	
+	def scmUrl = scm.getUserRemoteConfigs()[0].getUrl()
+	echo scmUrl
+	
 	sh("git config --global user.email 'you@example.com'")
     sh("git config --global user.name 'Your Name'")
     
