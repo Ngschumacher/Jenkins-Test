@@ -15,6 +15,7 @@ withCredentials([usernamePassword(credentialsId: '0bf97e9d-ff63-48c7-a37b-c294c7
 		
 		def scmVars = checkout scm
         def commitHash = scmVars.GIT_COMMIT
+		echo commitHash
 	}
 	echo scmUrl
 	
@@ -23,7 +24,7 @@ withCredentials([usernamePassword(credentialsId: '0bf97e9d-ff63-48c7-a37b-c294c7
 	
 	
 		
-		sh("git tag some_tag_${BUILD_NUMBER} -a")
+		sh("git tag some_tag_${BUILD_NUMBER} -a 'Jenkins' ")
 		//
 	}
 	scmUrl = scmUrl.replace("https://", "")
