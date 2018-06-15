@@ -2,14 +2,14 @@ node {
 //withCredentials([usernamePassword(passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
     //sh("git url: https://Ngschumacher:7wDV75NFKfuq@github.com/Ngschumacher/Timelog.git")
 	script {
-	def scmUrl = scm.getUserRemoteConfigs()[0].getUrl()
+	def scmUrl = scm.getUserRemoteConfigs()[0]
 	echo scmUrl
 	}
 	sh("git config --global user.email 'you@example.com'")
     sh("git config --global user.name 'Your Name'")
     
     sh("git tag -a some_tag_${BUILD_NUMBER}  -m 'Jenkins'")
-    sh("git push  --tags")
+    sh("git push ${scmUrl} --tags")
 //}
 
 }
