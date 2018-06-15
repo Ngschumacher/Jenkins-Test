@@ -15,7 +15,7 @@ withCredentials([usernamePassword(credentialsId: '0bf97e9d-ff63-48c7-a37b-c294c7
 		sh("git config --global user.name 'Your Name'")
 		
 		sh("git tag -a some_tag_${BUILD_NUMBER}  -m 'Jenkins'")
-		sh("git push https://${GIT_USERNAME}:${GIT_PASSWORD}:${scmUrl} --tags")
+		sh('git push https://${GIT_USERNAME}:${GIT_PASSWORD}:${scmUrl} --tags')
 	}
 }
 
