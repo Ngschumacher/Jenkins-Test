@@ -3,12 +3,13 @@ node {
 def scmUrl, username, password
 
 withCredentials([usernamePassword(credentialsId: '0bf97e9d-ff63-48c7-a37b-c294c74d5c3d', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
-	echo env.GIT_COMMIT 
+	
 	
 
     //sh("git url: https://Ngschumacher:7wDV75NFKfuq@github.com/Ngschumacher/Timelog.git")
 	script {
 		scmUrl = scm.getUserRemoteConfigs()[0].getUrl()
+		echo scm.GIT_COMMIT 
 	}
 	echo scmUrl
 	
