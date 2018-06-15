@@ -15,20 +15,22 @@ pipeline {
 
 					script {
 						scmUrl = scm.getUserRemoteConfigs()[0].getUrl()
+						scmUrl = scmUrl.replace("https://", "")
+						
 						
 						def scmVars = checkout scm
 						 commitHash = scmVars.GIT_COMMIT
 						echo commitHash
-					}
+					
 					echo scmUrl
 					
 					username = env.GIT_USERNAME
 					password = env.GIT_PASSWORD
-					
+					}
 					sh("git tag -a some_tag_${BUILD_NUMBER} ${commitHash}  -m 'Jenkins' ")
 						
 				}
-				scmUrl = scmUrl.replace("https://", "")
+				
 				
 				sh("git push https://${username}:${password}@${scmUrl} --tags")
 	
