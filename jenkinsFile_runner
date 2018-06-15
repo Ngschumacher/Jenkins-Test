@@ -1,5 +1,5 @@
 node {
-withCredentials([usernamePassword(credentialsId: 0bf97e9d-ff63-48c7-a37b-c294c74d5c3d, passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
+withCredentials([usernamePassword(credentialsId: '0bf97e9d-ff63-48c7-a37b-c294c74d5c3d', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
 
 	
 
