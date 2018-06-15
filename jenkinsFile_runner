@@ -11,7 +11,10 @@ withCredentials([usernamePassword(credentialsId: '0bf97e9d-ff63-48c7-a37b-c294c7
 		scmUrl = scm.getUserRemoteConfigs()[0].getUrl()
 		def commit =  scm.GIT_COMMIT
 		
-		echo commit
+		
+		
+		def scmVars = checkout scm
+        def commitHash = scmVars.GIT_COMMIT
 	}
 	echo scmUrl
 	
