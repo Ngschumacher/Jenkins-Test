@@ -1,34 +1,65 @@
-node {
 
-def scmUrl, username, password,commitHash
 
-withCredentials([usernamePassword(credentialsId: '0bf97e9d-ff63-48c7-a37b-c294c74d5c3d', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
+
+
+pipeline { 
+     
+
+	stages { 
+        stage('Checkout') { 
+            steps { 
+			
+				def scmUrl, username, password,commitHash
+
+				withCredentials([usernamePassword(credentialsId: '0bf97e9d-ff63-48c7-a37b-c294c74d5c3d', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
+
+					script {
+						scmUrl = scm.getUserRemoteConfigs()[0].getUrl()
+						
+						def scmVars = checkout scm
+						 commitHash = scmVars.GIT_COMMIT
+						echo commitHash
+					}
+					echo scmUrl
+					
+					username = env.GIT_USERNAME
+					password = env.GIT_PASSWORD
+					
+					sh("git tag -a some_tag_${BUILD_NUMBER} ${commitHash}  -m 'Jenkins' ")
+						
+				}
+				scmUrl = scmUrl.replace("https://", "")
+				
+				sh("git push https://${username}:${password}@${scmUrl} --tags")
 	
-	
-
-    //sh("git url: https://Ngschumacher:7wDV75NFKfuq@github.com/Ngschumacher/Timelog.git")
-	script {
-		scmUrl = scm.getUserRemoteConfigs()[0].getUrl()
-		def commit =  scm.GIT_COMMIT
-		
-		
-		
-		def scmVars = checkout scm
-         commitHash = scmVars.GIT_COMMIT
-		echo commitHash
+			}
+		}
 	}
-	echo scmUrl
-	
-	username = env.GIT_USERNAME
-	password = env.GIT_PASSWORD
-	
-	
-		
-		sh("git tag -a some_tag_${BUILD_NUMBER} ${commitHash}  -m 'Jenkins' ")
-		//
-	}
-	scmUrl = scmUrl.replace("https://", "")
-	
-	sh("git push https://${username}:${password}@${scmUrl} --tags")
-	}
+}
 
+
+/*
+pipeline { 
+     
+
+
+
+agent any  
+ 
+    stages { 
+        stage('Checkout') { 
+            steps { 
+                script {
+                    println = "test = ${env.GIT_COMMIT} "
+                    
+                }
+                bat "\"D:/Git/git 2.14.2 32 bit/bin/git.exe\" tag test -m testing"
+                
+                sshagent (credentials: ['aef30a69-b0a5-459f-8cc7-364749c0038c']) {
+                    bash "git tag test -m 'testing'"
+                }
+                 
+            } 
+        } 
+    }
+}*/
