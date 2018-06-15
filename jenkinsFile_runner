@@ -20,7 +20,7 @@ withCredentials([usernamePassword(credentialsId: '0bf97e9d-ff63-48c7-a37b-c294c7
 	
 	
 		
-		sh("git tag -a some_tag_${BUILD_NUMBER}  -m 'Jenkins'")
+		sh("git tag some_tag_${BUILD_NUMBER} -a")
 		//
 	}
 	scmUrl = scmUrl.replace("https://", "")
