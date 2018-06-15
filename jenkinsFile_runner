@@ -29,7 +29,7 @@ withCredentials([usernamePassword(credentialsId: '0bf97e9d-ff63-48c7-a37b-c294c7
 	echo password
 	echo scmUrl
 	sh("git remote set-url origin $scmUrl")
-	sh("git push https://${username}:${password} --tags")
+	sh("git push  --tags")
 	sh("git push --tags")
 	}
 
