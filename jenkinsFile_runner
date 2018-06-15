@@ -3,7 +3,7 @@ node {
 def scmUrl, username, password
 
 withCredentials([usernamePassword(credentialsId: '0bf97e9d-ff63-48c7-a37b-c294c74d5c3d', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
-
+	echo env.GIT_COMMIT 
 	
 
     //sh("git url: https://Ngschumacher:7wDV75NFKfuq@github.com/Ngschumacher/Timelog.git")
@@ -17,18 +17,10 @@ withCredentials([usernamePassword(credentialsId: '0bf97e9d-ff63-48c7-a37b-c294c7
 	
 	
 		
-		
-		sh("git config --global user.email 'you@example.com'")
-		sh("git config --global user.name 'Your Name'")
-		
 		sh("git tag -a some_tag_${BUILD_NUMBER}  -m 'Jenkins'")
 		//
 	}
-	
-	echo username
-	echo password
-	 scmUrl = scmUrl.replace("https://", "")
-	echo scmUrl
+	scmUrl = scmUrl.replace("https://", "")
 	
 	sh("git push https://${username}:${password}@${scmUrl} --tags")
 	}
