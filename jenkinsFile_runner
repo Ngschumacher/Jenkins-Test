@@ -1,6 +1,6 @@
 node {
 
-def scmUrl, username, password
+def scmUrl, username, password,commitHash
 
 withCredentials([usernamePassword(credentialsId: '0bf97e9d-ff63-48c7-a37b-c294c74d5c3d', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
 	
@@ -14,7 +14,7 @@ withCredentials([usernamePassword(credentialsId: '0bf97e9d-ff63-48c7-a37b-c294c7
 		
 		
 		def scmVars = checkout scm
-        def commitHash = scmVars.GIT_COMMIT
+         commitHash = scmVars.GIT_COMMIT
 		echo commitHash
 	}
 	echo scmUrl
@@ -24,7 +24,7 @@ withCredentials([usernamePassword(credentialsId: '0bf97e9d-ff63-48c7-a37b-c294c7
 	
 	
 		
-		sh("git tag some_tag_${BUILD_NUMBER} -a 'Jenkins' ")
+		sh("git tag -a some_tag_${BUILD_NUMBER} ${commitHash}  -m 'Jenkins' ")
 		//
 	}
 	scmUrl = scmUrl.replace("https://", "")
