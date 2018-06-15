@@ -23,4 +23,3 @@ withCredentials([usernamePassword(credentialsId: '0bf97e9d-ff63-48c7-a37b-c294c7
 	}
 }
 
-}
