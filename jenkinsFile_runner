@@ -36,8 +36,8 @@ pipeline {
 						
 				}
 				
-				sh("GIT_ASKPASS=true ${git} push origin --tags")  
-				sh("git push https://${username}:${password}@${scmUrl} --tags")
+				sh("GIT_ASKPASS=true git push origin --tags")  
+				//sh("git push https://${username}:${password}@${scmUrl} --tags")
 	
 			}
 		}
