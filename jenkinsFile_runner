@@ -25,7 +25,7 @@ pipeline {
 					echo scmUrl
 					
 					sh("git config credential.username ${env.GIT_USERNAME}")
-					sh("git config credential.helper '!f() { echo password=\$GIT_PASSWORD; }; f'")
+					sh("git config credential.helper '!f() { echo password=\{$env.GIT_PASSWORD}; }; f'")
 					
 									
 					
