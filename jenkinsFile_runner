@@ -23,7 +23,7 @@ pipeline {
 						echo commitHash
 					
 					echo scmUrl
-					echo $GIT_PASSWORD
+					
 					username = env.GIT_USERNAME
 					password = env.GIT_PASSWORD
 					
